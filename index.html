@@ -1,0 +1,283 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>stillF&nbsp;-&nbsp;萬年曆</title>
+    <link rel="stylesheet" type="text/css" href="/Calendar/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/Calendar/css/fontawesome-all.css">
+    <script type="text/javascript" src="/Calendar/js/vue.js"></script>
+    <script type="text/javascript" src="/Calendar/js/lodash.js"></script>
+
+    <!--<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/fontawesome-all.css">
+    <script type="text/javascript" src="./js/vue.js"></script>
+    <script type="text/javascript" src="./js/lodash.js"></script>-->
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+
+        .calendarDiv {
+            text-align: center;
+        }
+
+        .calendar {
+            margin: 30px 0;
+        }
+
+        .weekDay,
+        .week {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+
+            .weekDay > div {
+                flex: 1 1 0%;
+                line-height: 30px;
+            }
+
+        .week {
+            border-right: 1px solid #ddd;
+        }
+
+            .week > div {
+                position: relative;
+                flex: 1 1 0%;
+                height: 75px;
+                line-height: 30px;
+                border-left: 1px solid #ddd;
+            }
+
+                .week > div:before {
+                    position: absolute;
+                    content: attr(data-date);
+                    top: 0;
+                    right: 0;
+                    display: block;
+                    width: 30px;
+                    border-left: 1px solid #ddd;
+                    border-bottom: 1px solid #ddd;
+                }
+
+        .today:before {
+            color: #fff;
+            background-color: #000;
+        }
+
+        .holiday {
+            background-color: #eb6e6e;
+        }
+
+        .other {
+            color: #bbb;
+            background-color: #ddd;
+        }
+
+        .description {
+            margin-top: 35px;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-3">
+        <div class="container-fluid">
+            <a href="https://stillf.github.io/" class="navbar-brand" style="color:#ffffff;margin-left:10px;font-size:18px;" target="_blank">stillF&ensp;信柴柴，得第一</a>
+        </div>
+    </nav>
+    <main class="container" style="margin-bottom:50px;" id="CalendarVue">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div style="color:#333;font-size:22px;font-weight:bold;">
+                萬年曆
+                <a href="https://github.com/stillF/Calendar" style="margin-left:5px;" target="_blank"><i class="fas fa-link"></i></a>
+                <a href="https://data.gov.tw/dataset/14718" target="_blank" role="button" class="btn btn-primary" style="padding: 1px 5px; font-size: 12px;"><i class="fas fa-globe"></i></a>
+            </div>
+            <hr>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <div class="calendarDiv">
+                    <h1>{{ calendar.year }} 年 {{ calendar.month }} 月</h1>
+                    <div>
+                        <button @click="adjustYear(-1)">上一年</button>
+                        <button @click="adjustMonth(-1)">上個月</button>
+                        <button @click="setToday">今天</button>
+                        <button @click="adjustMonth(1)">下個月</button>
+                        <button @click="adjustYear(1)">下一年</button>
+                    </div>
+                    <div class="calendar">
+                        <div class="weekDay">
+                            <div>日</div>
+                            <div>一</div>
+                            <div>二</div>
+                            <div>三</div>
+                            <div>四</div>
+                            <div>五</div>
+                            <div>六</div>
+                        </div>
+                        <div class="week" v-for="i of 6">
+                            <div class="day" v-for="j in 7" :data-date="calendarList[(i-1)*7+j-1].date" :class="{
+             holiday:calendarList[(i-1)*7+j-1].isHoliday,
+today:calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1].month === today.month && calendarList[(i-1)*7+j-1].date === today.date,
+                                 other:calendarList[(i-1)*7+j-1].month !== calendar.month
+            }"><div class="description">{{ calendarList[(i-1)*7+j-1].description }}</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer py-1 bg-dark">
+        <div class="container text-center">
+            <span style="color:#ffffff;font-size:14px;">© Copyright 2022. All Rights Reserved.</span>
+        </div>
+    </footer>
+    <script>
+        new Vue({
+            el: '#CalendarVue',
+            data: {
+                hasJsonYearList: [2022],
+                holidayYearList: [],
+                holidayList: [],
+                calendarList: [],
+                today: {
+                    year: 0,
+                    month: 0,
+                    date: 0,
+                },
+                calendar: {
+                    year: 0,
+                    month: 0,
+                    date: 0,
+                }
+            },
+            methods: {
+                setToday: function () {
+                    const date = new Date()
+                    this.today.year = this.calendar.year = date.getFullYear();
+                    this.today.month = this.calendar.month = date.getMonth() + 1;
+                    this.today.date = this.calendar.date = date.getDate();
+                    this.getHolidayList();
+                },
+                loadJSON: function (callback) {
+                    var xobj = new XMLHttpRequest();
+                    xobj.overrideMimeType("application/json");
+                    xobj.open('GET', `./json/${this.calendar.year}.json`, false);
+                    xobj.onreadystatechange = function () {
+                        if (xobj.readyState == 4 && xobj.status == "200") {
+                            callback(JSON.parse(xobj.responseText));
+                        }
+                    };
+                    xobj.send(null);
+                },
+                getHolidayList: function () {
+                    let mJsonData = null;
+                    let tempHolidayList = [];
+                    if (_.indexOf(this.hasJsonYearList, this.calendar.year) >= 0) {
+                        if (_.indexOf(this.holidayYearList, this.calendar.year) === -1) {
+                            this.loadJSON(function (jsonData) {
+                                mJsonData = jsonData;
+                            });
+                            if (mJsonData) {
+                                this.holidayYearList.push(this.calendar.year);
+                                tempHolidayList = _.concat(this.holidayList, mJsonData);
+                                this.holidayList = tempHolidayList;
+                            }
+                        }
+                        this.setCalendarList();
+                    } else {
+                        this.setDefaultCalendarList();
+                    }
+                },
+                setCalendarList: function () {
+                    this.calendarList = [];
+                    const currentFirstDay = new Date(this.calendar.year, this.calendar.month - 1, 1);
+                    const calendarFirstDay = new Date(this.calendar.year, this.calendar.month - 1, 1 - currentFirstDay.getDay());
+                    const isFind = _.findIndex(this.holidayList, { 'year': calendarFirstDay.getFullYear(), 'month': calendarFirstDay.getMonth() + 1, 'date': calendarFirstDay.getDate() });
+                    let currentDate = null;
+                    if (isFind >= 0) {
+                        const iMax = isFind + 42;
+                        for (let i = isFind; i < iMax; i++) {
+                            currentDate = this.holidayList[i];
+                            if (currentDate) {
+                                this.calendarList.push(currentDate);
+                            } else {
+                                this.calendarList.push({
+                                    "year": null,
+                                    "month": null,
+                                    "date": null,
+                                    "isHoliday": false,
+                                    "description": null
+                                });
+                            }
+                        }
+                    } else {
+                        const mFirst = currentFirstDay.getDay() - 1;
+                        for (let i = 0; i < mFirst; i++) {
+                            this.calendarList.push({
+                                "year": null,
+                                "month": null,
+                                "date": null,
+                                "isHoliday": false,
+                                "description": null
+                            });
+                        }
+                        const iMax = 42 - mFirst;
+                        for (let i = isFind; i < iMax; i++) {
+                            currentDate = this.holidayList[i];
+                            if (currentDate) {
+                                this.calendarList.push(currentDate);
+                            } else {
+                                this.calendarList.push({
+                                    "year": null,
+                                    "month": null,
+                                    "date": null,
+                                    "isHoliday": false,
+                                    "description": null
+                                });
+                            }
+                        }
+                    }
+                },
+                setDefaultCalendarList: function () {
+                    this.calendarList = [];
+                    const currentFirstDay = new Date(this.calendar.year, this.calendar.month - 1, 1);
+                    const calendarFirstDay = new Date(this.calendar.year, this.calendar.month - 1, 1 - currentFirstDay.getDay() - 1);
+                    let tempDate = calendarFirstDay;
+                    for (let i = 0; i < 42; i++) {
+                        tempDate.setDate(calendarFirstDay.getDate() + 1);
+                        this.calendarList.push({
+                            "year": tempDate.getFullYear(),
+                            "month": tempDate.getMonth() + 1,
+                            "date": tempDate.getDate(),
+                            "isHoliday": false,
+                            "description": null
+                        });
+                    }
+                },
+                adjustYear: function (fix) {
+                    this.calendar.year += fix;
+                    this.getHolidayList();
+                },
+                adjustMonth: function (fix) {
+                    let month = this.calendar.month + fix;
+                    if (month > 12) {
+                        this.adjustYear(1);
+                        this.calendar.month = 1;
+                    } else if (month < 1) {
+                        this.adjustYear(-1);
+                        this.calendar.month = 12;
+                    } else {
+                        this.calendar.month = month;
+                    }
+                    this.getHolidayList();
+                }
+            },
+            mounted: function () {
+                this.setToday();
+            }
+        });
+    </script>
+</body>
+</html>
