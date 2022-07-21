@@ -318,7 +318,7 @@ today:calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1]
                     const lunarData = mCalendar.lunarData;
                     if (lunarData.year !== null) {
                         this.popModalContext = `國曆：${lunarData.date} (${lunarData.ncWeek})\n農曆：${lunarData.lunarDate} (${lunarData.gzYear}-${lunarData.gzMonth}-${lunarData.gzDay})${lunarData.Animal}\n星座：${lunarData.astro}`;
-                        if (mCalendar.description !== "") {
+                        if (mCalendar.description !== null && mCalendar.description !== "") {
                             this.popModalContext += `\n節日：${mCalendar.description}`;
                         }
                         let popModal = new bootstrap.Modal(document.getElementById('popModal'), {});
