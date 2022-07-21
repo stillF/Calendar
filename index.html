@@ -4,21 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>stillF&nbsp;-&nbsp;萬年曆</title>
-    <link rel="stylesheet" type="text/css" href="/Calendar/css/bootstrap.min.css">
+    <!--<!--<link rel="stylesheet" type="text/css" href="/Calendar/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/Calendar/css/fontawesome-all.css">
     <script type="text/javascript" src="/Calendar/js/popper.min.js"></script>
     <script type="text/javascript" src="/Calendar/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/Calendar/js/vue.js"></script>
     <script type="text/javascript" src="/Calendar/js/lodash.js"></script>
-    <script type="text/javascript" src="/Calendar/js/calendar.js"></script>
+    <script type="text/javascript" src="/Calendar/js/calendar.js"></script>-->-->
 
-    <!--<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="./css/fontawesome-all.css">
     <script type="text/javascript" src="./js/popper.min.js"></script>
     <script type="text/javascript" src="./js/bootstrap.min.js"></script>
     <script type="text/javascript" src="./js/vue.js"></script>
     <script type="text/javascript" src="./js/lodash.js"></script>
-    <script type="text/javascript" src="./js/calendar.js"></script>-->
+    <script type="text/javascript" src="./js/calendar.js"></script>
     <style>
         [v-cloak] {
             display: none;
@@ -122,11 +122,11 @@
                 <div class="calendarDiv">
                     <h1>{{ calendar.year }} 年 {{ calendar.month }} 月</h1>
                     <div>
-                        <button @click="adjustYear(-1)">上一年</button>
-                        <button @click="adjustMonth(-1)">上個月</button>
-                        <button @click="setToday">今天</button>
-                        <button @click="adjustMonth(1)">下個月</button>
-                        <button @click="adjustYear(1)">下一年</button>
+                        <button class="btn btn-primary btn-sm" type="button" @click="adjustYear(-1)">上一年</button>
+                        <button class="btn btn-success btn-sm" type="button" @click="adjustMonth(-1)">上個月</button>
+                        <button class="btn btn-dark btn-sm" type="button" @click="setToday">今天</button>
+                        <button class="btn btn-success btn-sm" type="button" @click="adjustMonth(1)">下個月</button>
+                        <button class="btn btn-primary btn-sm" type="button" @click="adjustYear(1)">下一年</button>
                     </div>
                     <div class="calendar">
                         <div class="weekDay">
