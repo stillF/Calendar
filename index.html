@@ -6,13 +6,19 @@
     <title>stillF&nbsp;-&nbsp;萬年曆</title>
     <link rel="stylesheet" type="text/css" href="/Calendar/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/Calendar/css/fontawesome-all.css">
+    <script type="text/javascript" src="/Calendar/js/popper.min.js"></script>
+    <script type="text/javascript" src="/Calendar/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/Calendar/js/vue.js"></script>
     <script type="text/javascript" src="/Calendar/js/lodash.js"></script>
+    <script type="text/javascript" src="/Calendar/js/calendar.js"></script>
 
     <!--<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="./css/fontawesome-all.css">
+    <script type="text/javascript" src="./js/popper.min.js"></script>
+    <script type="text/javascript" src="./js/bootstrap.min.js"></script>
     <script type="text/javascript" src="./js/vue.js"></script>
-    <script type="text/javascript" src="./js/lodash.js"></script>-->
+    <script type="text/javascript" src="./js/lodash.js"></script>
+    <script type="text/javascript" src="./js/calendar.js"></script>-->
     <style>
         [v-cloak] {
             display: none;
@@ -44,7 +50,7 @@
             .week > div {
                 position: relative;
                 flex: 1 1 0%;
-                height: 85px;
+                height: 90px;
                 line-height: 30px;
                 border-left: 1px solid #ddd;
             }
@@ -76,8 +82,23 @@
 
         .description {
             margin-top: 35px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             line-height: 15px;
+        }
+
+        .lunar {
+            font-size: 0.7rem;
+            position: absolute;
+            content: attr(data-date);
+            bottom: 0;
+            left: 0;
+            display: block;
+            border-right: 1px solid #ddd;
+            border-top: 1px solid #ddd;
+        }
+
+        .day {
+            cursor: pointer;
         }
     </style>
 </head>
@@ -118,12 +139,34 @@
                             <div>六</div>
                         </div>
                         <div class="week" v-for="i of 6">
-                            <div class="day" v-for="j in 7" :data-date="calendarList[(i-1)*7+j-1].date" :class="{
+                            <div class="day" v-for="j of 7" :data-date="calendarList[(i-1)*7+j-1].date" :class="{
              holiday:calendarList[(i-1)*7+j-1].isHoliday,
 today:calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1].month === today.month && calendarList[(i-1)*7+j-1].date === today.date,
                                  other:calendarList[(i-1)*7+j-1].month !== calendar.month
-            }"><div class="description">{{ calendarList[(i-1)*7+j-1].description }}</div></div>
+            }" @click="showCalendarData((i-1)*7+j-1)">
+                                <template v-if="calendarList[(i-1)*7+j-1].lunarData !== null">
+                                    <div class="lunar">
+                                        <span v-if="calendarList[(i-1)*7+j-1].lunarData.isTerm">{{ calendarList[(i-1)*7+j-1].lunarData.Term }}</span>
+                                        <span v-else>{{ calendarList[(i-1)*7+j-1].lunarData.IDayCn }}</span>
+                                    </div>
+                                </template>
+                                <div class="description">{{ calendarList[(i-1)*7+j-1].description }}</div>
+                            </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="popModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        日期資訊
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <pre>{{ popModalContext }}</pre>
                     </div>
                 </div>
             </div>
@@ -151,7 +194,8 @@ today:calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1]
                     year: 0,
                     month: 0,
                     date: 0,
-                }
+                },
+                popModalContext: "",
             },
             methods: {
                 setToday: function () {
@@ -202,6 +246,7 @@ today:calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1]
                         for (let i = isFind; i < iMax; i++) {
                             currentDate = this.holidayList[i];
                             if (currentDate) {
+                                currentDate["lunarData"] = calendar.solar2lunar(currentDate.year, currentDate.month, currentDate.date);
                                 this.calendarList.push(currentDate);
                             } else {
                                 this.calendarList.push({
@@ -209,7 +254,8 @@ today:calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1]
                                     "month": null,
                                     "date": null,
                                     "isHoliday": false,
-                                    "description": null
+                                    "description": null,
+                                    "lunarData": null
                                 });
                             }
                         }
@@ -221,13 +267,15 @@ today:calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1]
                                 "month": null,
                                 "date": null,
                                 "isHoliday": false,
-                                "description": null
+                                "description": null,
+                                "lunarData": null
                             });
                         }
                         const iMax = 42 - mFirst;
                         for (let i = isFind; i < iMax; i++) {
                             currentDate = this.holidayList[i];
                             if (currentDate) {
+                                currentDate["lunarData"] = calendar.solar2lunar(currentDate.year, currentDate.month, currentDate.date);
                                 this.calendarList.push(currentDate);
                             } else {
                                 this.calendarList.push({
@@ -235,7 +283,8 @@ today:calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1]
                                     "month": null,
                                     "date": null,
                                     "isHoliday": false,
-                                    "description": null
+                                    "description": null,
+                                    "lunarData": null
                                 });
                             }
                         }
@@ -246,15 +295,30 @@ today:calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1]
                     const currentFirstDay = new Date(this.calendar.year, this.calendar.month - 1, 1);
                     const calendarFirstDay = new Date(this.calendar.year, this.calendar.month - 1, 1 - currentFirstDay.getDay() - 1);
                     let tempDate = calendarFirstDay;
+                    let year = 0;
+                    let month = 0;
+                    let date = 0;
                     for (let i = 0; i < 42; i++) {
                         tempDate.setDate(calendarFirstDay.getDate() + 1);
+                        year = tempDate.getFullYear();
+                        month = tempDate.getMonth() + 1;
+                        date = tempDate.getDate();
                         this.calendarList.push({
-                            "year": tempDate.getFullYear(),
-                            "month": tempDate.getMonth() + 1,
-                            "date": tempDate.getDate(),
+                            year,
+                            month,
+                            date,
                             "isHoliday": false,
-                            "description": null
+                            "description": null,
+                            "lunarData": calendar.solar2lunar(year, month, date)
                         });
+                    }
+                },
+                showCalendarData: function (dataIndex) {
+                    const lunarData = this.calendarList[dataIndex].lunarData;
+                    if (lunarData.year !== null) {
+                        this.popModalContext = `國曆：${lunarData.date} (${lunarData.ncWeek})\n農曆：${lunarData.lunarDate} (${lunarData.gzYear}-${lunarData.gzMonth}-${lunarData.gzDay})${lunarData.Animal}\n星座：${lunarData.astro}`;
+                        let popModal = new bootstrap.Modal(document.getElementById('popModal'), {});
+                        popModal.show();
                     }
                 },
                 adjustYear: function (fix) {
