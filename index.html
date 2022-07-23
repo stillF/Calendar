@@ -97,6 +97,19 @@
             border-top: 1px solid #ddd;
         }
 
+        .lunarToday {
+            font-size: 0.7rem;
+            position: absolute;
+            content: attr(data-date);
+            bottom: 0;
+            left: 0;
+            display: block;
+            border-right: 1px solid #ddd;
+            border-top: 1px solid #ddd;
+            color: #fff;
+            background-color: #000;
+        }
+
         .day {
             cursor: pointer;
         }
@@ -145,7 +158,7 @@ today:calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1]
                                  other:calendarList[(i-1)*7+j-1].month !== calendar.month
             }" @click="showCalendarData((i-1)*7+j-1)">
                                 <template v-if="calendarList[(i-1)*7+j-1].lunarData !== null">
-                                    <div class="lunar">
+                                    <div :class="calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1].month === today.month && calendarList[(i-1)*7+j-1].date === today.date ? 'lunarToday' :'lunar'">
                                         <span v-if="calendarList[(i-1)*7+j-1].lunarData.isTerm">{{ calendarList[(i-1)*7+j-1].lunarData.Term }}</span>
                                         <span v-else>{{ calendarList[(i-1)*7+j-1].lunarData.IDayCn }}</span>
                                     </div>
@@ -166,7 +179,7 @@ today:calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1]
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <pre>{{ popModalContext }}</pre>
+                        <pre style="font-size: 1.2rem;">{{ popModalContext }}</pre>
                     </div>
                 </div>
             </div>
@@ -181,7 +194,7 @@ today:calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1]
         new Vue({
             el: '#CalendarVue',
             data: {
-                hasJsonYearList: [2022, 2023],
+                hasJsonYearList: [2017, 2018, 2019, 2020, 2021, 2022, 2023],
                 holidayYearList: [],
                 holidayList: [],
                 calendarList: [],
