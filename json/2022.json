@@ -312,7 +312,7 @@
     "month": 2,
     "date": 14,
     "isHoliday": false,
-    "description": ""
+    "description": "西洋情人節"
   },
   {
     "year": 2022,
@@ -466,7 +466,7 @@
     "month": 3,
     "date": 8,
     "isHoliday": false,
-    "description": ""
+    "description": "婦女節"
   },
   {
     "year": 2022,
@@ -508,7 +508,7 @@
     "month": 3,
     "date": 14,
     "isHoliday": false,
-    "description": ""
+    "description": "白色情人節"
   },
   {
     "year": 2022,
@@ -1509,7 +1509,7 @@
     "month": 8,
     "date": 4,
     "isHoliday": false,
-    "description": ""
+    "description": "七夕情人節"
   },
   {
     "year": 2022,
@@ -1537,7 +1537,7 @@
     "month": 8,
     "date": 8,
     "isHoliday": false,
-    "description": ""
+    "description": "父親節"
   },
   {
     "year": 2022,
@@ -1894,7 +1894,7 @@
     "month": 9,
     "date": 28,
     "isHoliday": false,
-    "description": ""
+    "description": "教師節"
   },
   {
     "year": 2022,
@@ -2125,7 +2125,7 @@
     "month": 10,
     "date": 31,
     "isHoliday": false,
-    "description": ""
+    "description": "萬聖節"
   },
   {
     "year": 2022,
@@ -2293,14 +2293,14 @@
     "month": 11,
     "date": 24,
     "isHoliday": false,
-    "description": ""
+    "description": "美國感恩節"
   },
   {
     "year": 2022,
     "month": 11,
     "date": 25,
     "isHoliday": false,
-    "description": ""
+    "description": "黑色星期五"
   },
   {
     "year": 2022,
@@ -2510,7 +2510,7 @@
     "month": 12,
     "date": 25,
     "isHoliday": true,
-    "description": ""
+    "description": "聖誕節"
   },
   {
     "year": 2022,
