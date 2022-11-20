@@ -179,10 +179,28 @@ today:calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1]
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <pre style="font-size: 1.2rem;">{{ popModalContext }}</pre>
+                        <pre style="font-size: 1.2rem;">{{ popModalContext }} {{ isLoading }}</pre>
                     </div>
                 </div>
             </div>
+        </div>
+        <div style="
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 999999;
+    "
+             v-show="isLoading">
+            <span style="
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -61px;
+        color: white;
+      ">資料載入中，請稍後。{{ isLoading }}</span>
         </div>
     </main>
     <footer class="footer py-1 bg-dark">
@@ -209,6 +227,7 @@ today:calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1]
                     date: 0,
                 },
                 popModalContext: "",
+                isLoading: false,
             },
             methods: {
                 setToday: function () {
@@ -219,6 +238,7 @@ today:calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1]
                     this.getHolidayList();
                 },
                 loadJSON: function (callback) {
+                    this.isLoading = true;
                     var xobj = new XMLHttpRequest();
                     xobj.overrideMimeType("application/json");
                     xobj.open('GET', `./json/${this.calendar.year}.json`, false);
@@ -228,6 +248,7 @@ today:calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1]
                         }
                     };
                     xobj.send(null);
+                    this.isLoading = false;
                 },
                 getHolidayList: function () {
                     let mJsonData = null;
