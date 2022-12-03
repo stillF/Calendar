@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,33 +39,33 @@
             border-bottom: 1px solid #ddd;
         }
 
-            .weekDay > div {
-                flex: 1 1 0%;
-                line-height: 30px;
-            }
+        .weekDay>div {
+            flex: 1 1 0%;
+            line-height: 30px;
+        }
 
         .week {
             border-right: 1px solid #ddd;
         }
 
-            .week > div {
-                position: relative;
-                flex: 1 1 0%;
-                height: 90px;
-                line-height: 30px;
-                border-left: 1px solid #ddd;
-            }
+        .week>div {
+            position: relative;
+            flex: 1 1 0%;
+            height: 90px;
+            line-height: 30px;
+            border-left: 1px solid #ddd;
+        }
 
-                .week > div:before {
-                    position: absolute;
-                    content: attr(data-date);
-                    top: 0;
-                    right: 0;
-                    display: block;
-                    width: 30px;
-                    border-left: 1px solid #ddd;
-                    border-bottom: 1px solid #ddd;
-                }
+        .week>div:before {
+            position: absolute;
+            content: attr(data-date);
+            top: 0;
+            right: 0;
+            display: block;
+            width: 30px;
+            border-left: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+        }
 
         .today:before {
             color: #fff;
@@ -115,18 +116,22 @@
         }
     </style>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-3">
         <div class="container-fluid">
-            <a href="https://stillf.github.io/" class="navbar-brand" style="color:#ffffff;margin-left:10px;font-size:18px;" target="_blank">stillF&ensp;信柴柴，得第一</a>
+            <a href="https://stillf.github.io/" class="navbar-brand"
+                style="color:#ffffff;margin-left:10px;font-size:18px;" target="_blank">stillF&ensp;信柴柴，得第一</a>
         </div>
     </nav>
     <main class="container" style="margin-bottom:50px;" id="CalendarVue">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div style="color:#333;font-size:22px;font-weight:bold;">
                 萬年曆
-                <a href="https://github.com/stillF/Calendar" style="margin-left:5px;" target="_blank"><i class="fas fa-link"></i></a>
-                <a href="https://data.gov.tw/dataset/14718" target="_blank" role="button" class="btn btn-primary" style="padding: 1px 5px; font-size: 12px;"><i class="fas fa-globe"></i></a>
+                <a href="https://github.com/stillF/Calendar" style="margin-left:5px;" target="_blank"><i
+                        class="fas fa-link"></i></a>
+                <a href="https://data.gov.tw/dataset/14718" target="_blank" role="button" class="btn btn-primary"
+                    style="padding: 1px 5px; font-size: 12px;"><i class="fas fa-globe"></i></a>
             </div>
             <hr>
         </div>
@@ -158,8 +163,10 @@ today:calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1]
                                  other:calendarList[(i-1)*7+j-1].month !== calendar.month
             }" @click="showCalendarData((i-1)*7+j-1)">
                                 <template v-if="calendarList[(i-1)*7+j-1].lunarData !== null">
-                                    <div :class="calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1].month === today.month && calendarList[(i-1)*7+j-1].date === today.date ? 'lunarToday' :'lunar'">
-                                        <span v-if="calendarList[(i-1)*7+j-1].lunarData.isTerm">{{ calendarList[(i-1)*7+j-1].lunarData.Term }}</span>
+                                    <div
+                                        :class="calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1].month === today.month && calendarList[(i-1)*7+j-1].date === today.date ? 'lunarToday' :'lunar'">
+                                        <span v-if="calendarList[(i-1)*7+j-1].lunarData.isTerm">{{
+                                            calendarList[(i-1)*7+j-1].lunarData.Term }}</span>
                                         <span v-else>{{ calendarList[(i-1)*7+j-1].lunarData.IDayCn }}</span>
                                     </div>
                                 </template>
@@ -179,7 +186,7 @@ today:calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1]
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <pre style="font-size: 1.2rem;">{{ popModalContext }} {{ isLoading }}</pre>
+                        <pre style="font-size: 1.2rem;">{{ popModalContext }}</pre>
                     </div>
                 </div>
             </div>
@@ -192,8 +199,7 @@ today:calendarList[(i-1)*7+j-1].year === today.year && calendarList[(i-1)*7+j-1]
       left: 0;
       background-color: rgba(0, 0, 0, 0.7);
       z-index: 999999;
-    "
-             v-show="isLoading">
+    " v-show="isLoading">
             <span style="
         position: absolute;
         top: 50%;
